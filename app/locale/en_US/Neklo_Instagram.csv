@@ -3,6 +3,7 @@ API Client ID,API Client ID
 By Hashtag,By Hashtag
 By Product Hashtag,By Product Hashtag
 By User ID,By User ID
+By User Name,By User Name
 Cache Lifetime,Cache Lifetime
 Description,Description
 General,General
@@ -10,7 +11,7 @@ Hashtag,Hashtag
 In seconds,In seconds
 Limit,Limit
 Mode,Mode
-Neklo Instagram Template,Neklo Instagram Template
+Instagram Widget Default Template,Instagram Widget Default Template
 Template,Template
 Thumbnail Height,Thumbnail Height
 Thumbnail Width,Thumbnail Width

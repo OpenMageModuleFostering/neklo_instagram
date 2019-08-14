@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Neklo_Core>
-            <version>1.0.2</version>
+            <version>1.1.1</version>
         </Neklo_Core>
     </modules>
     <admin>
@@ -34,6 +34,13 @@
         </models>
     </global>
     <adminhtml>
+        <layout>
+            <updates>
+                <awall module="Neklo_Core">
+                    <file>neklo/core.xml</file>
+                </awall>
+            </updates>
+        </layout>
         <translate>
             <modules>
                 <Neklo_Core>
@@ -44,14 +51,6 @@
             </modules>
         </translate>
         <events>
-            <controller_action_predispatch_adminhtml_system_config_edit>
-                <observers>
-                    <neklo_core>
-                        <class>neklo_core/observer</class>
-                        <method>renderContact</method>
-                    </neklo_core>
-                </observers>
-            </controller_action_predispatch_adminhtml_system_config_edit>
             <controller_action_predispatch>
                 <observers>
                     <neklo_core_admin_notification>
@@ -60,16 +59,25 @@
                     </neklo_core_admin_notification>
                 </observers>
             </controller_action_predispatch>
+            <adminhtml_block_html_before>
+                <observers>
+                    <sort_module_tab_list>
+                        <class>neklo_core/observer</class>
+                        <method>sortModuleTabList</method>
+                    </sort_module_tab_list>
+                </observers>
+            </adminhtml_block_html_before>
         </events>
     </adminhtml>
     <default>
         <neklo_core>
-            <admin_notification>
-                <feed_url>store.neklo.com/notifications.rss</feed_url>
+            <notification>
+                <feed_url>store.neklo.com/magento-update/magento-notifications.rss</feed_url>
                 <use_https>0</use_https>
                 <frequency>24</frequency>
                 <last_update>0</last_update>
-            </admin_notification>
+                <type>UPDATE,RELEASE,UPDATE_ALL,PROMO,INFO</type>
+            </notification>
         </neklo_core>
     </default>
 </config>

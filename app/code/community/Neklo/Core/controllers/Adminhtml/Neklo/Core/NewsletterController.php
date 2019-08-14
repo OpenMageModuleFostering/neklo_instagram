@@ -2,7 +2,7 @@
 
 class Neklo_Core_Adminhtml_Neklo_Core_NewsletterController extends Mage_Adminhtml_Controller_Action
 {
-    const SUBSCRIBE_URL = '<subscribe_url></subscribe_url>';
+    const SUBSCRIBE_URL = 'http://store.neklo.com/neklo_subscribe/index/index/';
 
     public function subscribeAction()
     {

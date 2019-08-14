@@ -1,97 +1,109 @@
 <?xml version="1.0"?>
 <widgets>
     <neklo_instagram type="neklo_instagram/widget_feed" module="neklo_instagram">
-        <name>Neklo Instagram Widget</name>
+        <name>[NEKLO] Instagram Widget</name>
         <parameters>
-            <mode translate="label">
-                <label>Mode</label>
-                <type>select</type>
+            <is_enabled translate="label">
+                <label>Is Enabled</label>
+                <required>1</required>
                 <visible>1</visible>
                 <sort_order>10</sort_order>
-                <values>
-                    <use_user_id translate="label">
-                        <value>1</value>
-                        <label>By User ID</label>
-                    </use_user_id>
-                    <use_hashtag translate="label">
-                        <value>2</value>
-                        <label>By Hashtag</label>
-                    </use_hashtag>
-                    <use_product_hashtag translate="label">
-                        <value>3</value>
-                        <label>By Product Hashtag</label>
-                    </use_product_hashtag>
-                </values>
+                <type>select</type>
+                <source_model>adminhtml/system_config_source_yesno</source_model>
                 <value>1</value>
+            </is_enabled>
+            <mode translate="label">
+                <label>Mode</label>
+                <required>1</required>
+                <visible>1</visible>
+                <sort_order>20</sort_order>
+                <type>select</type>
+                <source_model>neklo_instagram/source_mode</source_model>
+                <value>4</value>
             </mode>
-            
             <user_id translate="label description">
                 <label>User ID</label>
-                <required>0</required>
+                <required>1</required>
                 <visible>1</visible>
+                <sort_order>30</sort_order>
                 <type>text</type>
                 <value></value>
-                <sort_order>20</sort_order>
-		<description>{how-to-get-user-id}</description>
-                <depends><mode><value>1</value></mode></depends>
+                <description>{how-to-get-user-id}</description>
+                <depends>
+                    <mode>
+                        <value>1</value>
+                    </mode>
+                </depends>
             </user_id>
-            
             <hashtag translate="label">
                 <label>Hashtag</label>
-                <required>0</required>
+                <required>1</required>
                 <visible>1</visible>
+                <sort_order>40</sort_order>
                 <type>text</type>
                 <value></value>
-                <sort_order>30</sort_order>
-                <depends><mode><value>2</value></mode></depends>
+                <depends>
+                    <mode>
+                        <value>2</value>
+                    </mode>
+                </depends>
             </hashtag>
-            
+            <user_name translate="label description">
+                <label>User Name</label>
+                <required>1</required>
+                <visible>1</visible>
+                <sort_order>50</sort_order>
+                <type>text</type>
+                <value></value>
+                <description><![CDATA[Example: http://instagram.com/<b>neklo_llc</b>]]></description>
+                <depends>
+                    <mode>
+                        <value>4</value>
+                    </mode>
+                </depends>
+            </user_name>
             <title translate="label description">
                 <label>Title</label>
                 <required>0</required>
                 <visible>1</visible>
+                <sort_order>60</sort_order>
                 <type>text</type>
                 <value></value>
-                <sort_order>40</sort_order>
-                <description>Example: Instagram Feed #%s </description>
+                <description><![CDATA[Example: Instagram Feed #%s<br/><b>%s</b> - replaces by hashtag]]></description>
             </title>
-                               
             <description translate="label description">
                 <label>Description</label>
                 <required>0</required>
                 <visible>1</visible>
+                <sort_order>70</sort_order>
                 <type>textarea</type>
                 <value></value>
-                <sort_order>50</sort_order>
-                <description>Example: Description for feed #%s </description>
+                <description><![CDATA[Example: Description Feed #%s<br/><b>%s</b> - replaces by hashtag]]></description>
             </description>
-            
             <limit_items translate="label">
                 <label>Limit</label>
                 <required>1</required>
                 <visible>1</visible>
+                <sort_order>80</sort_order>
                 <type>text</type>
                 <value>5</value>
-                <sort_order>60</sort_order>
             </limit_items>
-            
             <image_width translate="label">
                 <label>Thumbnail Width</label>
                 <required>1</required>
                 <visible>1</visible>
+                <sort_order>90</sort_order>
                 <type>text</type>
                 <value>200</value>
-                <sort_order>70</sort_order>
             </image_width>
             <image_height translate="label">
                 <label>Thumbnail Height</label>
                 <required>1</required>
                 <visible>1</visible>
+                <sort_order>100</sort_order>
                 <type>text</type>
                 <value>200</value>
-                <sort_order>80</sort_order>
             </image_height>
-            
             <template translate="label">
                 <label>Template</label>
                 <visible>1</visible>
@@ -100,10 +112,10 @@
                 <values>
                     <featured translate="label">
                         <value>neklo_instagram/widget/feed.phtml</value>
-                        <label>Neklo Instagram Template</label>
+                        <label>Instagram Widget Default Template</label>
                     </featured>
                 </values>
-                <sort_order>90</sort_order>
+                <sort_order>110</sort_order>
             </template>
         </parameters>
     </neklo_instagram>

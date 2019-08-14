@@ -2,8 +2,6 @@
 
 class Neklo_Instagram_Model_Instagram
 {
-    const CLIENT_ID = '3a700f8477174a2da05895ee57b829f9';
-
     protected $_api = null;
 
     /**
@@ -11,93 +9,114 @@ class Neklo_Instagram_Model_Instagram
      *
      * @return Neklo_Instagram_Model_Instagram_Api
      */
-    public function getAPI()
+    public function getApi()
     {
-        if ($this->_api) {
-            return $this->_api;
+        if ($this->_api === null) {
+            $this->_api = Mage::getModel(
+                'neklo_instagram/instagram_api',
+                $this->_getConfig()->getAccessToken()
+            );
         }
-        $this->_api = Mage::getModel('neklo_instagram/instagram_api', self::CLIENT_ID);
         return $this->_api;
     }
 
+    /**
+     * @param string $name
+     * @param int $limit
+     *
+     * @return Varien_Data_Collection
+     */
     public function getTagMedia($name, $limit = 0)
     {
+        $collection = new Varien_Data_Collection();
         try {
-            $response = $this->getAPI()->getTagMedia($name, $limit);
+            $response = $this->getApi()->getTagMedia($name, $limit);
         } catch (Exception $e) {
             Mage::logException($e);
-            return array();
+            return $collection;
         }
-        $collection = new Varien_Data_Collection();
         if (!isset($response->data) || !is_array($response->data)) {
             return $collection;
         }
-
         foreach ($response->data as $item) {
             if (!isset($item->images->low_resolution->url)) {
                 continue;
             }
-
             $image = new Varien_Object();
             $image->setUrl($item->images->low_resolution->url);
-
             if (isset($item->caption->text)) {
                 $image->setName($item->caption->text);
             }
-
             if (isset($item->link)) {
                 $image->setLink($item->link);
             }
-
             $collection->addItem($image);
         }
-
         return $collection;
     }
 
     /**
-     * @param int $id
+     * @param string $userId
+     * @param int    $limit
      *
-     * @return Variend_Data_Collection
+     * @return Varien_Data_Collection
      */
-    public function getUserMedia($id, $limit = 0)
+    public function getUserMediaById($userId, $limit = 0)
     {
+        $collection = new Varien_Data_Collection();
         try {
-            $response = $this->getAPI()->getUserMedia($id, $limit);
+            $response = $this->getApi()->getUserMedia($userId, $limit);
         } catch (Exception $e) {
             Mage::logException($e);
-            return array();
+            return $collection;
         }
-
-        $collection = new Varien_Data_Collection();
         if (!isset($response->data) || !is_array($response->data)) {
             return $collection;
         }
-
         foreach ($response->data as $item) {
             if (!isset($item->images->low_resolution->url)) {
                 continue;
             }
-
             $image = new Varien_Object();
             $image->setUrl($item->images->low_resolution->url);
-
             if (isset($item->caption->text)) {
                 $image->setName($item->caption->text);
             }
-
             if (isset($item->link)) {
                 $image->setLink($item->link);
             }
-
             $collection->addItem($image);
         }
-
         return $collection;
     }
 
-    protected function getHelper()
+    /**
+     * @param string $userName
+     * @param int $limit
+     *
+     * @return Varien_Data_Collection
+     */
+    public function getUserMediaByName($userName, $limit = 0)
     {
-        return Mage::helper('neklo_instagram');
+        $collection = new Varien_Data_Collection();
+        try {
+            $response = $this->getApi()->searchUser($userName);
+        } catch (Exception $e) {
+            Mage::logException($e);
+            return $collection;
+        }
+        if (!isset($response->data) || !is_array($response->data) || !count($response->data)) {
+            return $collection;
+        }
+        $user = current($response->data);
+        return $this->getUserMediaById($user->id, $limit);
+    }
+
+    /**
+     * @return Neklo_Instagram_Helper_Config
+     */
+    protected function _getConfig()
+    {
+        return Mage::helper('neklo_instagram/config');
     }
 }

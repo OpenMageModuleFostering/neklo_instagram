@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="1.0.0">
+    <adminhtml_neklo_instagram_api_connect>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>neklo/instagram/reload.phtml</template>
+            </action>
+        </reference>
+    </adminhtml_neklo_instagram_api_connect>
+</layout>

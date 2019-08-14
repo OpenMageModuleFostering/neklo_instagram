@@ -2,12 +2,12 @@
 
 class Neklo_Core_Adminhtml_Neklo_Core_ContactController extends Mage_Adminhtml_Controller_Action
 {
-    const CONTACT_URL = '<support_url></support_url>';
+    const CONTACT_URL = 'http://store.neklo.com/neklo_support/index/index/';
 
-    public function indexAction()
+    public function sendAction()
     {
         $result = array(
-            'error' => 0,
+            'success' => true,
         );
         try {
             $data = $this->getRequest()->getPost();
@@ -16,20 +16,12 @@ class Neklo_Core_Adminhtml_Neklo_Core_ContactController extends Mage_Adminhtml_C
             $data['id'] = '<order_item_customer></order_item_customer>';
             $this->_sendContactEmail($data);
         } catch (Exception $e) {
-            $result['message'][] = $e->getMessage();
-            $result['error'] = 1;
+            Mage::logException($e);
+            $result['success'] = false;
             $this->getResponse()->setBody(Zend_Json::encode($result));
             return;
         }
-        $result['message'][] = $this->__("Thank you for your request.");
-        $result['message'][] = $this->__("We'll respond as soon as possible.");
-        $result['message'][] = $this->__("We'll send copy of your request to your email.");
         $this->getResponse()->setBody(Zend_Json::encode($result));
-    }
-
-    protected function _isAllowed()
-    {
-        return Mage::getSingleton('admin/session')->isAllowed('system/config/neklo_core');
     }
 
     protected function _sendContactEmail($data)
@@ -50,5 +42,10 @@ class Neklo_Core_Adminhtml_Neklo_Core_ContactController extends Mage_Adminhtml_C
                 ->request()
             ;
         }
+    }
+
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('system/config/neklo_core');
     }
 }

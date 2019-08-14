@@ -4,10 +4,10 @@
         <Neklo_Instagram>
             <active>true</active>
             <codePool>community</codePool>
-            <depends><Neklo_Core /></depends>
-            <extension_name>Neklo Instagram Widget</extension_name>
+            <depends>
+                <Neklo_Core/>
+            </depends>
             <free>1</free>
-            <url></url>
         </Neklo_Instagram>
     </modules>
 </config>

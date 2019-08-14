@@ -1,24 +1,20 @@
-<?php
-    $images = $this->getImages();
-    $hashtag = $this->getHashtag();
-?>
-<?php if (count($images) || $hashtag) : ?>
-    <div class="neklo-instagram">
-        <?php if ($this->getTitle()) : ?>
-            <div class="neklo-instagram-title">
-                <span><?php echo $this->escapeHtml(str_replace('%s', $hashtag, $this->getTitle())) ?></span>
-            </div>
-        <?php endif; ?>
-        
-        <?php if ($this->getDescription()) : ?>
-            <div class="neklo-instagram-description">
-                <span><?php echo nl2br($this->escapeHtml(str_replace('%s', $hashtag, $this->getDescription()))) ?></span>
-            </div>
-        <?php endif; ?>
-        
-        <?php if (count($images)): ?>
+<?php /* @var $this Neklo_Instagram_Block_Widget_Feed */ ?>
+<?php if ($this->canShow()): ?>
+    <?php $imageList = $this->getImageList(); ?>
+    <?php if (count($imageList)) : ?>
+        <div class="neklo-instagram">
+            <?php if ($this->getTitle()) : ?>
+                <div class="neklo-instagram-title">
+                    <span><?php echo $this->escapeHtml($this->getTitle()) ?></span>
+                </div>
+            <?php endif; ?>
+            <?php if ($this->getDescription()) : ?>
+                <div class="neklo-instagram-description">
+                    <span><?php echo nl2br($this->escapeHtml($this->getDescription())) ?></span>
+                </div>
+            <?php endif; ?>
             <ul class="neklo-instagram-list">
-                <?php foreach ($images as $image) : ?>
+                <?php foreach ($imageList as $image) : ?>
                     <li>
                         <a href="<?php echo $image->getLink(); ?>" target="_blank" >
                             <i class="neklo-instagram-over"></i>
@@ -27,6 +23,6 @@
                     </li>
                 <?php endforeach; ?>
             </ul>
-        <?php endif; ?>
-    </div>
+        </div>
+    <?php endif; ?>
 <?php endif; ?>

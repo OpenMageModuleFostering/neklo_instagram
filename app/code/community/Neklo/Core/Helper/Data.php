@@ -2,6 +2,9 @@
 
 class Neklo_Core_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    const DOMAIN = 'http://store.neklo.com/';
+    const LOGO_IMG = 'neklo.png';
+
     public function __()
     {
         $args = func_get_args();
@@ -15,6 +18,11 @@ class Neklo_Core_Helper_Data extends Mage_Core_Helper_Abstract
 
     protected function _getLogoUrl()
     {
-        return $this->_getRequest()->getPost('neklo_cache') . 'neklo.png';
+        return self::DOMAIN . 'cache/' . ($this->_getCacheKey() ? $this->_getCacheKey() . '/' : '') . self::LOGO_IMG;
+    }
+
+    protected function _getCacheKey()
+    {
+        return Mage::helper('neklo_core/extension')->getCacheKey();
     }
 }

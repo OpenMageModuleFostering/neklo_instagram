@@ -1,47 +1,126 @@
 <?php
+/**
+ * @method string getIsEnabled()
+ * @method string getMode()
+ * @method string getUserId()
+ * @method string getUserName()
+ * @method string getHashtag()
+ * @method string getLimitItems()
+ * @method string getImageWidth()
+ * @method string getImageHeight()
+ */
 class Neklo_Instagram_Block_Widget_Feed extends Mage_Core_Block_Template implements Mage_Widget_Block_Interface
 {
-    const NEKLO_WIDGET_CACHE_KEY='NEKLO_WIDGET_INST_CACHE_KEY';
+    const CACHE_KEY = 'NEKLO_WIDGET_INSTAGRAM_CACHE_KEY';
 
-    protected function _construct()
+    protected $_api = null;
+
+    public function setNameInLayout($name)
     {
-        $i = Mage::registry(self::NEKLO_WIDGET_CACHE_KEY);
-        if (!isset($i)) {
-            $i = 0;
-        }
-        {
-            Mage::unregister(self::NEKLO_WIDGET_CACHE_KEY, $i);
-            $i++;
-        }
-        Mage::register(self::NEKLO_WIDGET_CACHE_KEY, $i);
-
-        $this->setCacheKey(self::NEKLO_WIDGET_CACHE_KEY . '_' . $i);
-
-        $this->setCacheLifetime(Mage::helper('neklo_instagram')->getCacheLifetime());
-        parent::_construct();
+        $this->addData(
+            array(
+                'cache_lifetime' => $this->_getConfig()->getCacheLifetime(),
+                'cache_key'      => self::CACHE_KEY . '-' . $name,
+            )
+        );
+        return parent::setNameInLayout($name);
     }
-    
-    public function getImages() {
+
+    public function canShow()
+    {
+        return $this->_getConfig()->isConnected() && ($this->getIsEnabled() || $this->getIsEnabled() === null);
+    }
+
+    public function getTitle()
+    {
+        $title = $this->getData('title');
+        $hashtag = $this->getHashtag();
+        if ($hashtag) {
+            $title = str_replace('%s', $hashtag, $title);
+        }
+        return $title;
+    }
+
+    public function getDescription()
+    {
+        $description = $this->getData('description');
+        $hashtag = $this->getHashtag();
+        if ($hashtag) {
+            $description = str_replace('%s', $hashtag, $description);
+        }
+        return $description;
+    }
+
+    public function getImageList()
+    {
         switch ($this->getMode()) {
-            case Neklo_Instagram_Helper_Data::INSTAGRAM_MODE_BY_USER_ID:
-                if ($this->getUserId()) {
-                    return Mage::getModel('neklo_instagram/instagram')->getUserMedia($this->getUserId(), $this->getLimitItems());
-                }
-                break;
-            case Neklo_Instagram_Helper_Data::INSTAGRAM_MODE_BY_HASHTAG:
-                if ($this->getHashtag()) {
-                    return Mage::getModel('neklo_instagram/instagram')->getTagMedia(trim($this->getHashtag(), ' #'), $this->getLimitItems());
-                }
-                break;
-            case Neklo_Instagram_Helper_Data::INSTAGRAM_MODE_BY_PRODUCT_HASHTAG:
-                $product = Mage::registry('current_product');
-                if ($product && $product->getInstagramHashtag()) {
-                    $hashtag = trim($product->getInstagramHashtag(), ' #');
-                    $this->setHashtag($hashtag);
-                    return Mage::getModel('neklo_instagram/instagram')->getTagMedia($hashtag, $this->getLimitItems());
-                }
+            case Neklo_Instagram_Model_Source_Mode::BY_USER_ID_CODE:
+                return $this->_getUserMediaById();
+            case Neklo_Instagram_Model_Source_Mode::BY_HASHTAG_CODE:
+                return $this->_getTagMedia();
+            case Neklo_Instagram_Model_Source_Mode::BY_PRODUCT_HASHTAG_CODE:
+                return $this->_getProductTagMedia();
+            case Neklo_Instagram_Model_Source_Mode::BY_USER_NAME_CODE:
+                return $this->_getUserMediaByName();
+            default:
+                $imageList = array();
                 break;
         }
-        return array();
+        return $imageList;
+    }
+
+    protected function _getUserMediaById()
+    {
+        return $this->_getApi()->getUserMediaById(
+            $this->getUserId(), $this->getLimitItems()
+        );
+    }
+
+    protected function _getTagMedia()
+    {
+        if (!$this->getHashtag()) {
+            return array();
+        }
+        return $this->_getApi()->getTagMedia(
+            $this->getHashtag(), $this->getLimitItems()
+        );
+    }
+
+    protected function _getProductTagMedia()
+    {
+        $product = Mage::registry('current_product');
+        if (!$product || !$product->getId() || !$product->getInstagramHashtag()) {
+            return array();
+        }
+        $this->setHashtag($product->getInstagramHashtag());
+        return $this->_getApi()->getTagMedia(
+            $this->getHashtag(), $this->getLimitItems()
+        );
+    }
+
+    protected function _getUserMediaByName()
+    {
+        return $this->_getApi()->getUserMediaByName(
+            $this->getUserName(), $this->getLimitItems()
+        );
+    }
+
+    /**
+     * @return Neklo_Instagram_Model_Instagram
+     */
+    protected function _getApi()
+    {
+        if ($this->_api === null) {
+            $this->_api = Mage::getModel('neklo_instagram/instagram');
+        }
+        return $this->_api;
+    }
+
+    /**
+     * @return Neklo_Instagram_Helper_Config
+     */
+    protected function _getConfig()
+    {
+        return Mage::helper('neklo_instagram/config');
     }
 }
