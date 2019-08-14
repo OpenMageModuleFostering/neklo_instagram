@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+NOTICE OF LICENSE
+
+This source file is subject to the NekloEULA that is bundled with this package in the file ICENSE.txt.
+
+It is also available through the world-wide-web at this URL: http://store.neklo.com/LICENSE.txt
+
+Copyright (c)  Neklo (http://store.neklo.com/)
+-->
+<config>
+    <modules>
+        <Neklo_Core>
+            <version>1.0.0</version>
+        </Neklo_Core>
+    </modules>
+    <admin>
+        <routers>
+            <neklo>
+                <use>admin</use>
+                <args>
+                    <module>Neklo_Core</module>
+                    <frontName>neklo</frontName>
+                </args>
+            </neklo>
+        </routers>
+    </admin>
+    <global>
+        <blocks>
+            <neklo_core>
+                <class>Neklo_Core_Block</class>
+            </neklo_core>
+        </blocks>
+        <helpers>
+            <neklo_core>
+                <class>Neklo_Core_Helper</class>
+            </neklo_core>
+        </helpers>
+         <models>
+            <neklo_core>
+                <class>Neklo_Core_Model</class>
+            </neklo_core>
+        </models>
+        <template>
+            <email>
+                <neklo_contact_email_template>
+                    <label>Neklo Contact</label>
+                    <file>neklo_contact.html</file>
+                    <type>text</type>
+                </neklo_contact_email_template>
+                <neklo_contact_copy_email_template>
+                    <label>Neklo Contact Copy</label>
+                    <file>neklo_contact_copy.html</file>
+                    <type>text</type>
+                </neklo_contact_copy_email_template>
+            </email>
+        </template>
+    </global>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Neklo_Core>
+                    <files>
+                        <default>Neklo_Core.csv</default>
+                    </files>
+                </Neklo_Core>
+            </modules>
+        </translate>
+        <events>
+            <controller_action_predispatch_adminhtml_system_config_edit>
+                <observers>
+                    <neklo_core>
+                        <class>neklo_core/observer</class>
+                        <method>renderContact</method>
+                    </neklo_core>
+                </observers>
+            </controller_action_predispatch_adminhtml_system_config_edit>
+        </events>
+    </adminhtml>
+</config>
