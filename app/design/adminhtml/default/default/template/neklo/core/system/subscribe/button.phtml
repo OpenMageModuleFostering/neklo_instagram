@@ -1,0 +1,161 @@
+<?php /* @var $this Neklo_Core_Block_System_Newsletter_Subscribe_Button */ ?>
+<?php echo $this->getButtonHtml(); ?>
+<div class="neklo_core_message"></div>
+<script>
+    var NekloCoreSubscribe = Class.create({
+        initialize: function (config) {
+            this.initConfig(config);
+            this.initElements();
+            this.initObservers();
+        },
+
+        initConfig: function (config) {
+            this.config = config;
+            this.subscribeUrl = this.config.subscribeUrl || '';
+
+            this.successMessage = this.config.successMessage || '';
+            this.errorMessage = this.config.errorMessage || '';
+
+            this.successMessageClass = this.config.successMessageClass || '';
+            this.errorMessageClass = this.config.errorMessageClass || '';
+
+
+            this.formContainerId = this.config.formContainerId || '';
+            this.formElementSelectorList = this.config.formElementSelectorList || [];
+        },
+
+        initElements: function () {
+            this.subscribeButton = $(this.config.subscribeButtonId) || null;
+            this.loadingMask = $(this.config.loadingMaskId) || null;
+            this.messageContainer = $$(this.config.messageContainerSelector).first() || null;
+        },
+
+        initObservers: function () {
+            if (this.subscribeButton) {
+                this.subscribeButton.observe('click', this.subscribe.bind(this));
+            }
+        },
+
+        subscribe: function () {
+            if (!this.validate()) {
+                return;
+            }
+
+            var me = this;
+            var subscribeData = {};
+            this.formElementSelectorList.each(function (elementSelector) {
+                subscribeData[elementSelector] = $(me.formContainerId + '_' + elementSelector).getValue();
+            });
+
+            new Ajax.Request(
+                this.subscribeUrl,
+                {
+                    method: 'post',
+                    parameters: subscribeData,
+                    onCreate: this._onSubscribeCreate.bind(this),
+                    onComplete: this._onSubscribeComplete.bind(this),
+                    onSuccess: this._onSubscribeSuccess.bind(this),
+                    onFailure: this._onSubscribeFailure.bind(this)
+                }
+            );
+        },
+
+        validate: function () {
+            var me = this;
+            var result = true;
+            this.formElementSelectorList.each(function (elementSelector) {
+                result = Validation.validate($(me.formContainerId + '_' + elementSelector));
+            });
+            return result;
+        },
+
+        showLoadingMask: function () {
+            if (this.loadingMask) {
+                this.loadingMask.show();
+            }
+        },
+
+        hideLoadingMask: function () {
+            if (this.loadingMask) {
+                this.loadingMask.hide();
+            }
+        },
+
+        _onSubscribeCreate: function () {
+            this.clearMessageContainer();
+            this.showLoadingMask();
+        },
+
+        _onSubscribeComplete: function () {
+            this.hideLoadingMask();
+        },
+
+        _onSubscribeSuccess: function (response) {
+            try {
+                var result = response.responseText.evalJSON();
+                if (typeof(result.success) != 'undefined') {
+                    if (result.success) {
+                        this.showSuccess();
+                    } else {
+                        this.showError();
+                    }
+                }
+            } catch (e) {
+                this.showError();
+            }
+        },
+
+        _onSubscribeFailure: function () {
+            this.showError();
+        },
+
+        showSuccess: function () {
+            this.showMessage(this.successMessage, this.successMessageClass);
+        },
+
+        showError: function () {
+            this.showMessage(this.errorMessage, this.errorMessageClass);
+        },
+
+        showMessage: function (message, className) {
+            this.clearMessageContainer();
+            var messageElement = new Element('p', {'class': className}).update(message);
+            this.messageContainer.appendChild(messageElement);
+        },
+
+        clearMessageContainer: function () {
+            this.messageContainer.update('');
+        }
+    });
+
+    var subscribeForm = new NekloCoreSubscribe({
+        'subscribeUrl': '<?php echo $this->getUrl('adminhtml/neklo_core_newsletter/subscribe'); ?>',
+
+        'successMessage': '<?php echo $this->__('Successfully subscribed'); ?>',
+        'errorMessage': '<?php echo $this->__('Subscribe error'); ?>',
+
+        'successMessageClass': 'success',
+        'errorMessageClass': 'error',
+
+        'formContainerId' : '<?php echo $this->getContainerId(); ?>',
+        'formElementSelectorList': ['name', 'email'],
+
+        'subscribeButtonId': 'neklo_core_subscribe',
+        'loadingMaskId': 'loading-mask',
+        'messageContainerSelector': '.neklo_core_message'
+    });
+</script>
+<style>
+    .neklo_core_message {
+        text-align: center;
+        padding: 5px 0;
+        font-weight: bold;
+        width: 280px;
+    }
+    .neklo_core_message .error {
+        color: #D40707;
+    }
+    .neklo_core_message .success {
+        color: #3d6611;
+    }
+</style>

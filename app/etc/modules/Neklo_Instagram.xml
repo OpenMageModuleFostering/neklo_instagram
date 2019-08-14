@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Neklo_Instagram>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends><Neklo_Core /></depends>
+            <extension_name>Neklo Instagram Widget</extension_name>
+            <free>1</free>
+            <url></url>
+        </Neklo_Instagram>
+    </modules>
+</config>

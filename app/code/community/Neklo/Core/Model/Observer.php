@@ -1,16 +1,16 @@
 <?php
-/*
-NOTICE OF LICENSE
 
-This source file is subject to the NekloEULA that is bundled with this package in the file ICENSE.txt.
-
-It is also available through the world-wide-web at this URL: http://store.neklo.com/LICENSE.txt
-
-Copyright (c)  Neklo (http://store.neklo.com/)
-*/
-
-class Neklo_Core_Model_Observer {
-    public function renderContact($observer) {
+class Neklo_Core_Model_Observer
+{
+    public function renderContact($observer)
+    {
         Mage::getBlockSingleton('neklo_core/system_contact')->render(new Varien_Data_Form_Element_Fieldset);
+    }
+
+    public function checkUpdate(Varien_Event_Observer $observer)
+    {
+        if (Mage::getSingleton('admin/session')->isLoggedIn()) {
+            Mage::getModel('neklo_core/feed')->checkUpdate();
+        }
     }
 }

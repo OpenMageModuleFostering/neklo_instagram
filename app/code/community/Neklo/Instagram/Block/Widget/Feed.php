@@ -1,17 +1,22 @@
 <?php
-/*
-NOTICE OF LICENSE
-
-This source file is subject to the NekloEULA that is bundled with this package in the file ICENSE.txt.
-
-It is also available through the world-wide-web at this URL: http://store.neklo.com/LICENSE.txt
-
-Copyright (c)  Neklo (http://store.neklo.com/)
-*/
-
 class Neklo_Instagram_Block_Widget_Feed extends Mage_Core_Block_Template implements Mage_Widget_Block_Interface
-{ 
-    protected function _construct() {
+{
+    const NEKLO_WIDGET_CACHE_KEY='NEKLO_WIDGET_INST_CACHE_KEY';
+
+    protected function _construct()
+    {
+        $i = Mage::registry(self::NEKLO_WIDGET_CACHE_KEY);
+        if (!isset($i)) {
+            $i = 0;
+        }
+        {
+            Mage::unregister(self::NEKLO_WIDGET_CACHE_KEY, $i);
+            $i++;
+        }
+        Mage::register(self::NEKLO_WIDGET_CACHE_KEY, $i);
+
+        $this->setCacheKey(self::NEKLO_WIDGET_CACHE_KEY . '_' . $i);
+
         $this->setCacheLifetime(Mage::helper('neklo_instagram')->getCacheLifetime());
         parent::_construct();
     }

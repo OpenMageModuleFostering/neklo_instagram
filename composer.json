@@ -1,12 +1,12 @@
 {
-    "name": "OpenMageModuleFostering/neklo_instagram",
+    "name": "OpenMageModuleFostering/Neklo_Instagram",
     "type": "magento-module",
-    "license": "OSL",
+    "license": "License",
     "homepage": "",
-    "description": "Free Magento Community extension that adds Instagram to your online store.",
+    "description": "Summary",
     "authors": [
     {
-        "name": "Neklo",
+        "name": "NEKLO",
         "email": "info@neklo.com"
     }
 ],

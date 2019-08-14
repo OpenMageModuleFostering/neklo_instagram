@@ -1,28 +1,19 @@
 <?xml version="1.0"?>
-<!--
-NOTICE OF LICENSE
-
-This source file is subject to the NekloEULA that is bundled with this package in the file ICENSE.txt.
-
-It is also available through the world-wide-web at this URL: http://store.neklo.com/LICENSE.txt
-
-Copyright (c)  Neklo (http://store.neklo.com/)
--->
 <config>
     <modules>
         <Neklo_Core>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
         </Neklo_Core>
     </modules>
     <admin>
         <routers>
-            <neklo>
-                <use>admin</use>
+            <adminhtml>
                 <args>
-                    <module>Neklo_Core</module>
-                    <frontName>neklo</frontName>
+                    <modules>
+                        <neklo before="Mage_Adminhtml">Neklo_Core_Adminhtml</neklo>
+                    </modules>
                 </args>
-            </neklo>
+            </adminhtml>
         </routers>
     </admin>
     <global>
@@ -36,25 +27,11 @@ Copyright (c)  Neklo (http://store.neklo.com/)
                 <class>Neklo_Core_Helper</class>
             </neklo_core>
         </helpers>
-         <models>
+        <models>
             <neklo_core>
                 <class>Neklo_Core_Model</class>
             </neklo_core>
         </models>
-        <template>
-            <email>
-                <neklo_contact_email_template>
-                    <label>Neklo Contact</label>
-                    <file>neklo_contact.html</file>
-                    <type>text</type>
-                </neklo_contact_email_template>
-                <neklo_contact_copy_email_template>
-                    <label>Neklo Contact Copy</label>
-                    <file>neklo_contact_copy.html</file>
-                    <type>text</type>
-                </neklo_contact_copy_email_template>
-            </email>
-        </template>
     </global>
     <adminhtml>
         <translate>
@@ -75,6 +52,24 @@ Copyright (c)  Neklo (http://store.neklo.com/)
                     </neklo_core>
                 </observers>
             </controller_action_predispatch_adminhtml_system_config_edit>
+            <controller_action_predispatch>
+                <observers>
+                    <neklo_core_admin_notification>
+                        <class>neklo_core/observer</class>
+                        <method>checkUpdate</method>
+                    </neklo_core_admin_notification>
+                </observers>
+            </controller_action_predispatch>
         </events>
     </adminhtml>
+    <default>
+        <neklo_core>
+            <admin_notification>
+                <feed_url>store.neklo.com/notifications.rss</feed_url>
+                <use_https>0</use_https>
+                <frequency>24</frequency>
+                <last_update>0</last_update>
+            </admin_notification>
+        </neklo_core>
+    </default>
 </config>

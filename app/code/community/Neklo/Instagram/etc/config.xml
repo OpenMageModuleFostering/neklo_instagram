@@ -1,17 +1,8 @@
 <?xml version="1.0"?>
-<!--
-NOTICE OF LICENSE
-
-This source file is subject to the NekloEULA that is bundled with this package in the file ICENSE.txt.
-
-It is also available through the world-wide-web at this URL: http://store.neklo.com/LICENSE.txt
-
-Copyright (c)  Neklo (http://store.neklo.com/)
--->
 <config>
     <modules>
         <Neklo_Instagram>
-            <version>1.0.0</version>
+            <version>1.0.3</version>
         </Neklo_Instagram>
     </modules>
     <frontend>
@@ -64,7 +55,6 @@ Copyright (c)  Neklo (http://store.neklo.com/)
     <default>
         <neklo_instagram>
             <general>
-                <api_client_id></api_client_id>
                 <cache_lifetime>3600</cache_lifetime>
             </general>
         </neklo_instagram>
