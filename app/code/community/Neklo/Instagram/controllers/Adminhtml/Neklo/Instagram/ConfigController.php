@@ -1,14 +1,32 @@
 <?php
 
-class Neklo_Instagram_Adminhtml_Neklo_Instagram_ApiController extends Mage_Adminhtml_Controller_Action
+class Neklo_Instagram_Adminhtml_Neklo_Instagram_ConfigController extends Mage_Adminhtml_Controller_Action
 {
     protected $_api = null;
-
-    public function disconnectAction()
+    
+    public function saveAction()
     {
-        $this->_getConfig()->disconnect();
-        $this->_getSession()->addSuccess(Mage::helper('neklo_instagram')->__('Instagram disconnect is successful.'));
-        return $this->_redirect('adminhtml/system_config/edit', array('section' => 'neklo_instagram'));
+        $result = array(
+            'success'   => true,
+            'login_url' => null,
+        );
+        $clientId = $this->getRequest()->getParam('client_id', null);
+        $clientSecret = $this->getRequest()->getParam('client_secret', null);
+
+        try {
+            $this->_getConfig()->saveClientId($clientId);
+            $this->_getConfig()->saveClientSecret($clientSecret);
+        } catch (Exception $e) {
+            $result['success'] = false;
+        }
+
+        $result['login_url'] = $this->_getApi()->getLoginUrl(
+            array('basic', 'public_content')
+        );
+
+        $this->getResponse()->setBody(
+            Zend_Json::encode($result)
+        );
     }
 
     /**

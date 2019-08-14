@@ -40,9 +40,9 @@ class Neklo_Instagram_Block_Adminhtml_System_Config_Frontend_Oauth_Connect exten
         return $this->_getApi()->getLoginUrl(array('basic', 'public_content'));
     }
 
-    public function getRedirectUrl()
+    public function getSaveConfigUrl()
     {
-        return Mage::helper("adminhtml")->getUrl("adminhtml/neklo_instagram_api/connect");
+        return Mage::helper("adminhtml")->getUrl("adminhtml/neklo_instagram_config/save");
     }
 
     /**
@@ -56,7 +56,7 @@ class Neklo_Instagram_Block_Adminhtml_System_Config_Frontend_Oauth_Connect exten
                 array(
                     'apiKey'      => $this->_getConfig()->getClientId(),
                     'apiSecret'   => $this->_getConfig()->getClientSecret(),
-                    'apiCallback' => $this->getRedirectUrl(),
+                    'apiCallback' => $this->_getConfig()->getRedirectUrl(),
                 )
             );
         }

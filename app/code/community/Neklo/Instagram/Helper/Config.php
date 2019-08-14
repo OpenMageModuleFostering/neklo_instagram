@@ -41,14 +41,42 @@ class Neklo_Instagram_Helper_Config extends Mage_Core_Helper_Abstract
         return Mage::helper('core')->decrypt(Mage::getStoreConfig(self::API_ACCESS_TOKEN, $store));
     }
 
+    public function saveClientId($clientId)
+    {
+        $this->_saveConfig(self::API_CLIENT_ID, $clientId);
+
+        // reinit configuration cache
+        Mage::getConfig()->reinit();
+    }
+
     public function getClientId($store = null)
     {
         return Mage::getStoreConfig(self::API_CLIENT_ID, $store);
     }
 
+    public function saveClientSecret($clientSecret)
+    {
+        $this->_saveConfig(self::API_CLIENT_SECRET, $clientSecret);
+
+        // reinit configuration cache
+        Mage::getConfig()->reinit();
+    }
+
     public function getClientSecret($store = null)
     {
         return Mage::getStoreConfig(self::API_CLIENT_SECRET, $store);
+    }
+
+    public function getRedirectUrl()
+    {
+        $url = Mage::getUrl("neklo_instagram/api/connect");
+        if (stripos($url, 'index.php')) {
+            return $url;
+        }
+        $baseUrl = Mage::getBaseUrl();
+        $baseUrl = str_ireplace('index.php', '', $baseUrl);
+        $url = str_ireplace($baseUrl, '', $url);
+        return $baseUrl . 'index.php/' . $url;
     }
 
     protected function _saveConfig($path, $value, $scope = 'default', $scopeId = 0)

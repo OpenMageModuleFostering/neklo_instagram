@@ -36,9 +36,9 @@
     <adminhtml>
         <layout>
             <updates>
-                <awall module="Neklo_Core">
+                <neklo_core module="Neklo_Core">
                     <file>neklo/core.xml</file>
-                </awall>
+                </neklo_core>
             </updates>
         </layout>
         <translate>

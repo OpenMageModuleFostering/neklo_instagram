@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Neklo_Instagram>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
         </Neklo_Instagram>
     </modules>
     <admin>
@@ -17,6 +17,15 @@
         </routers>
     </admin>
     <frontend>
+        <routers>
+            <neklo_instagram>
+                <use>standard</use>
+                <args>
+                    <module>Neklo_Instagram</module>
+                    <frontName>neklo_instagram</frontName>
+                </args>
+            </neklo_instagram>
+        </routers>
         <layout>
             <updates>
                 <neklo_instagram>
@@ -26,13 +35,6 @@
         </layout>
     </frontend>
     <adminhtml>
-        <layout>
-            <updates>
-                <neklo_instagram>
-                    <file>neklo/instagram.xml</file>
-                </neklo_instagram>
-            </updates>
-        </layout>
         <translate>
             <modules>
                 <Neklo_Instagram>
