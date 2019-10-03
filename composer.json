@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/Neklo_Instagram",
+    "name": "OpenMageModuleFostering\/Neklo_Instagram",
     "type": "magento-module",
     "license": "License",
     "homepage": "",
     "description": "API Changes",
     "authors": [
-    {
-        "name": "NEKLO",
-        "email": "info@neklo.com"
-    }
-],
+        {
+            "name": "NEKLO",
+            "email": "info@neklo.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
